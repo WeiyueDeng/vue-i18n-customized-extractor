@@ -1,0 +1,36 @@
+{
+  "name": "vue-i18n-customized-extractor",
+  "version": "0.1.7",
+  "keywords": [
+    "vue",
+    "i18n",
+    "cli",
+    "translation",
+    "extractor",
+    "customized",
+    "replacement",
+    "ast"
+  ],
+  "description": "A CLI tool to extract text and i18n keys from Vue.js files.",
+  "author": "Weiyue Deng",
+  "license": "MIT",
+  "bin": {
+    "vue-i18n-customized-extractor": "./bin/cli.js"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.27.5",
+    "@babel/traverse": "^7.27.4",
+    "@vue/compiler-dom": "^3.5.16",
+    "@vue/compiler-sfc": "^3.5.16",
+    "cheerio": "^1.1.0",
+    "glob": "^11.0.2",
+    "magic-string": "^0.30.17"
+  },
+  "files": [
+    "bin",
+    "extractorHelper.js",
+    "splitHelper.js",
+    "replaceHelper.js",
+    "astReplaceHelper.js"
+  ]
+}
