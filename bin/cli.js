@@ -5,6 +5,7 @@ const extractorHelper = require('../extractorHelper.js');
 const splitHelper = require('../splitHelper.js');
 const replaceHelper = require('../replaceHelper.js');
 const astReplaceHelper = require('../astReplaceHelper.js');
+const updateTranslationMappingHelper = require('../updateTranslationMappingHelper.js');
 
 // Read targetDir from CLI args
 const args = process.argv.slice(2);
@@ -34,11 +35,22 @@ const greedy = args.includes('--greedy');
 // For runASTReplace Mode Only
 const vueScriptMode = args.findIndex(arg => arg.startsWith('--vue-script-mode='));
 
+// For deduplicateKey Mode Only
+const runDeduplicateKey = args.includes('--run-deduplicate-key');
+
+// For mergeKey Mode Only
+const runMergeKey = args.includes('--run-merge-key');
+
+// For deduplicateKey mode and mergeKey mode
+const targetFilePath = args.findIndex(arg => arg.startsWith('--target-file-path='));
+const sourceFilePath = args.findIndex(arg => arg.startsWith('--source-file-path='));
+
+
 if (args.includes('--help')) {
     console.log(`
 vue-i18n-customized-extractor
 
-A CLI tool to extract, split, and replace i18n keys and text in Vue.js projects.
+A CLI tool to extract, split, replace, deduplicate, and merge i18n keys and text in Vue.js projects.
 
 USAGE:
   vue-i18n-customized-extractor [options]
@@ -79,10 +91,26 @@ AST Replace Mode (--run-ast-replace) [Recommended]
   --config=<path>                Path to custom config file (.cjs).
   --keys=<key1,key2,...>         Extract keys for specific components/pages.
 
+Deduplicate Mode (--run-deduplicate-key)
+  --run-deduplicate-key          Remove keys from target file(s) that already exist in the source file(s).
+  --target-file-path=<path>      Path to the target JSON file or folder.
+  --source-file-path=<path>      Path to the source JSON file or folder.
+
+Merge Mode (--run-merge-key)
+  --run-merge-key                Merge keys from target file(s) into source file(s), adding only new keys.
+  --target-file-path=<path>      Path to the target JSON file or folder.
+  --source-file-path=<path>      Path to the source JSON file or folder.
+
 Help
   --help                         Show help and usage instructions.
 
 EXAMPLES:
+
+  Deduplicate keys in target file/folder based on source file/folder:
+    vue-i18n-customized-extractor --run-deduplicate-key --target-file-path=src/locales/en.json --source-file-path=src/locales/base.json
+
+  Merge keys from target file/folder into source file/folder:
+    vue-i18n-customized-extractor --run-merge-key --target-file-path=src/locales/new.json --source-file-path=src/locales/en.json
 
   Extract i18n keys from the src directory:
     vue-i18n-customized-extractor --path=./src
@@ -169,7 +197,30 @@ if (runSplit) {
             templateOnly,
         }
     );
-}else {
+} else if (runDeduplicateKey) {
+    if (targetFilePath !== -1 && sourceFilePath !== -1) {
+        console.log('Running in deduplicate key mode... Help to deduplicate keys in target files based on source files');
+        updateTranslationMappingHelper.deduplicateKeys(
+            args[targetFilePath].split('=')[1],
+            args[sourceFilePath].split('=')[1]
+        );
+    } else {
+        console.log("No target file path or source file path specified for deduplicate key mode. Please use --target-file-path=<path> and --source-file-path=<path> to specify the target and source file paths.");
+        process.exit(0);
+    }
+} else if (runMergeKey) {
+    if (targetFilePath !== -1 && sourceFilePath !== -1) {
+        console.log('Running in merge key mode... Help to merge target file into source file');
+        updateTranslationMappingHelper.merge(
+            args[targetFilePath].split('=')[1],
+            args[sourceFilePath].split('=')[1]
+        );
+    } else {
+        console.log("No target file path or source file path specified for merge key mode. Please use --target-file-path=<path> and --source-file-path=<path> to specify the target and source file paths.");
+        process.exit(0);
+    }
+
+} else {
     console.log("⚠️ No valid mode specified. Please use --run-extractor, --run-split, or --run-replace.");
     process.exit(0);
 }

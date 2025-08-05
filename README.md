@@ -242,6 +242,41 @@ _After:_
 
 ---
 
+#### Deduplicate Mode (`--run-deduplicate-key`)
+
+- `--run-deduplicate-key`  
+    Remove keys from the target file(s) that already exist in the source file(s).
+- `--target-file-path=<path>`  
+    Path to the target JSON file or folder.
+- `--source-file-path=<path>`  
+    Path to the source JSON file or folder.
+
+---
+
+#### Merge Mode (`--run-merge-key`)
+
+- `--run-merge-key`  
+    Merge keys from the target file(s) into the source file(s), adding only new keys.
+- `--target-file-path=<path>`  
+    Path to the target JSON file or folder.
+- `--source-file-path=<path>`  
+    Path to the source JSON file or folder.
+
+    > **Note:**  
+    > Deduplicate and merge modes are designed to help you keep your translation mapping files up-to-date and free of duplicates.
+    >
+    > - **File and Folder Support:**  
+    >   Both `--target-file-path` and `--source-file-path` accept either JSON file paths or folder paths.  
+    >   - If both are JSON files, the tool will add keys from the target file into the source file.  
+    >   - If a key already exists in the source file, its original value is preserved and the duplicate from the target file is skipped.
+    >   - If both are folders, the tool processes all direct `.json` files in the target folder and looks for files with the same name in the source folder.  
+    >   - For each matching file pair, keys from the target file are merged into the source file as described above.
+    >   - If a corresponding file does not exist in the source folder, the tool creates a new file in the source folder using the content from the target file.
+    >
+    > This ensures your translation mappings remain current, preserves existing translations, and prevents duplication.
+
+---
+
 #### Help
 - `--help`  
     Show help and usage instructions.
@@ -249,7 +284,7 @@ _After:_
 ---
 
 **Tip:**  
-Use only options relevant to your mode (`--run-extractor`, `--run-split`, or `--run-replace`).
+Use only options relevant to your mode (`--run-extractor`, `--run-split`,`--run-replace`, `--run-deduplicate-key`, or `--run-merge-key`).
 
 #### Key Features
 
