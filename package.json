@@ -31,6 +31,7 @@
     "extractorHelper.js",
     "splitHelper.js",
     "replaceHelper.js",
-    "astReplaceHelper.js"
+    "astReplaceHelper.js",
+    "updateTranslationMappingHelper.js"
   ]
 }
