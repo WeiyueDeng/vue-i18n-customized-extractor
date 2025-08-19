@@ -1342,16 +1342,17 @@ function processJSContent(code, extractedStrings, includeT, needToReadFileData =
             })){
                 return;
             }
-
-            // Skip name: 'SomeName'
-            if (
-                path.parent.type === 'ObjectProperty' &&
-                path.parent.key &&
-                ((path.parent.key.type === 'Identifier' && path.parent.key.name === 'name') ||
-                (path.parent.key.type === 'StringLiteral' && path.parent.key.value === 'name'))
-            ) {
-                return;
-            }
+            
+            // DON'T skip 'name' in ObjectProperty
+            // // Skip name: 'SomeName'
+            // if (
+            //     path.parent.type === 'ObjectProperty' &&
+            //     path.parent.key &&
+            //     ((path.parent.key.type === 'Identifier' && path.parent.key.name === 'name') ||
+            //     (path.parent.key.type === 'StringLiteral' && path.parent.key.value === 'name'))
+            // ) {
+            //     return;
+            // }
   
             
             // Skip mapState, mapActions usage
